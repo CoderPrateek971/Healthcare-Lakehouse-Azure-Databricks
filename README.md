@@ -2,41 +2,43 @@
 
 ## Project Overview
 
-This project implements an end-to-end Healthcare Lakehouse Analytics Platform using Azure Data Lake Storage Gen2 (ADLS Gen2), Azure Databricks, Delta Live Tables (DLT), OMOP Common Data Model (CDM), and Databricks SQL Dashboards.
+This project implements an end-to-end Healthcare Lakehouse Analytics Platform using Azure Data Lake Storage Gen2 (ADLS Gen2), Azure Databricks, Delta Live Tables (DLT), OMOP Common Data Model (CDM), Unity Catalog, and Databricks SQL Dashboards.
 
 The solution follows the Medallion Architecture (Bronze → Silver → Gold) to ingest, transform, standardize, and analyze healthcare data.
 
-The final output is a Databricks SQL Dashboard containing clinical KPIs such as ADT Volume, Readmission Rate, Top Diagnoses, Medication Usage, and Length of Stay.
+The final output is a Databricks SQL Dashboard powered by Gold KPI tables containing healthcare insights such as ADT Volume, Readmission Rate, Top Diagnoses, Medication Usage, and Average Length of Stay.
 
 ---
 
 # Architecture
 
+```
 Raw Healthcare Files (ADLS Gen2)
 
-↓
+        ↓
 
 Bronze Layer (Ingestion)
 
-↓
+        ↓
 
 Silver Layer (Transformation)
 
-↓
+        ↓
 
 OMOP CDM Mapping
 
-↓
+        ↓
 
-Gold Analytics Layer
+Gold Analytics & KPI Tables
 
-↓
+        ↓
 
 Databricks SQL Dashboard
 
-↓
+        ↓
 
 Healthcare Insights
+```
 
 ---
 
@@ -47,6 +49,7 @@ Healthcare Insights
 * Delta Lake
 * Delta Live Tables (DLT)
 * Unity Catalog
+* Databricks Workflows
 * Databricks SQL
 * PySpark
 * SQL
@@ -72,11 +75,11 @@ Before starting, ensure you have:
 
 Azure Portal → Resource Groups → Create
 
-Example:
+Example
 
-Resource Group Name:
-
+```
 healthcare-rg
+```
 
 ---
 
@@ -84,49 +87,41 @@ healthcare-rg
 
 Azure Portal → Storage Accounts → Create
 
-Configuration:
+Enable
 
-Storage Account Name:
-
-healthcareadls
-
-Enable:
-
+```
 Hierarchical Namespace = Enabled
+```
 
 ---
 
-## Step 3: Create Containers
+## Step 3: Create Storage Containers
 
 Create the following containers:
 
-raw
-
-bronze
-
-silver
-
-gold
+* raw
+* bronze
+* silver
+* gold
 
 Purpose:
 
-raw → Source healthcare datasets
-
-bronze → Raw Delta tables
-
-silver → Cleaned and transformed data
-
-gold → Analytics-ready datasets
+* raw → Source healthcare datasets
+* bronze → Raw Delta tables
+* silver → Cleaned & standardized datasets
+* gold → Analytics-ready datasets
 
 ---
 
 ## Step 4: Upload Healthcare Files
 
-Upload source files into:
+Upload source healthcare datasets into
 
+```
 raw/
+```
 
-Example datasets:
+Example
 
 * patients.csv
 * encounters.csv
@@ -137,21 +132,13 @@ Example datasets:
 
 ## Step 5: Create Azure Databricks Workspace
 
-Azure Portal → Azure Databricks → Create
-
-Attach it to:
-
-healthcare-rg
+Create a Databricks Workspace and attach it to your Resource Group.
 
 ---
 
 ## Step 6: Create Compute Cluster
 
-Inside Databricks:
-
-Compute → Create Compute
-
-Configuration:
+Recommended Runtime
 
 * Databricks Runtime 15+
 * Standard_DS3_v2 (or equivalent)
@@ -160,15 +147,11 @@ Configuration:
 
 ## Step 7: Configure Unity Catalog
 
-Create Catalog:
+Create
 
 ```sql
 CREATE CATALOG db_healthcare_kl;
-```
 
-Create Schemas:
-
-```sql
 CREATE SCHEMA bronze;
 CREATE SCHEMA silver;
 CREATE SCHEMA omop;
@@ -179,20 +162,29 @@ CREATE SCHEMA gold;
 
 ## Step 8: Connect ADLS Gen2
 
-Configure Storage Credential and External Location.
+Configure
 
-Grant access to the Databricks workspace.
+* Storage Credential
+* External Location
 
-Verify access to:
+Grant access to
 
-* raw container
-* bronze container
-* silver container
-* gold container
+* raw
+* bronze
+* silver
+* gold
 
 ---
 
-# Layer 1 — Bronze: Ingestion
+# Unity Catalog Note
+
+A Unity Catalog bootstrap notebook is included for enterprise deployments.
+
+Azure Student subscriptions do not provide permissions to create a metastore or managed catalog programmatically. Therefore, the catalog and schemas were created manually before development. The bootstrap notebook is provided as a reusable template for enterprise Databricks environments.
+
+---
+
+# Layer 1 — Bronze
 
 ## Objective
 
@@ -203,12 +195,14 @@ Ingest raw healthcare datasets into the Lakehouse.
 * Auto Loader ingestion
 * Schema inference
 * Schema evolution
-* Delta table storage
-* Batch and micro-batch ingestion
+* Delta tables
+* Batch & micro-batch ingestion
 
 ## Notebook
 
+```
 01_Bronze_Layer
+```
 
 ## Output Tables
 
@@ -219,43 +213,27 @@ Ingest raw healthcare datasets into the Lakehouse.
 
 ---
 
-# Layer 2 — Silver: Transformation
+# Layer 2 — Silver
 
 ## Objective
 
-Clean, standardize, and validate healthcare records.
+Clean, standardize, validate and transform healthcare records.
 
 ## Features
 
 * Data cleansing
 * Null handling
 * Deduplication
-* Standardized column naming
-* Data quality checks
-* DLT expectations
+* Standardized schema
+* DLT Expectations
+* Data quality validation
 * Surrogate key generation
 
 ## Notebook
 
+```
 02_Silver_Layer
-
-## Processed Entities
-
-### Patient
-
-Demographics and patient information
-
-### Encounter
-
-Visit and admission information
-
-### Condition
-
-Clinical diagnoses
-
-### Medication
-
-Medication prescriptions and exposures
+```
 
 ## Output Tables
 
@@ -270,13 +248,15 @@ Medication prescriptions and exposures
 
 ## Objective
 
-Map Silver entities to OMOP Common Data Model v5.4.
+Map Silver entities into OMOP CDM v5.4.
 
 ## Notebook
 
+```
 03_OMOP_Mapping
+```
 
-## OMOP Tables
+## Output Tables
 
 * omop.person
 * omop.visit_occurrence
@@ -285,109 +265,182 @@ Map Silver entities to OMOP Common Data Model v5.4.
 
 ---
 
-# Layer 3 — Gold: Analytics
+# Layer 3 — Gold Analytics
 
 ## Objective
 
-Create business-ready analytical datasets.
+Create business-ready analytical datasets and KPI tables.
 
 ## Notebook
 
+```
 04_Gold_Layer
+```
 
-## Gold Tables
+## Analytical Tables
 
-### Patient Cohorts
+* Patient Cohorts
+* Encounter Summary
+* Readmission Flags
 
-Patient population analytics
+## KPI Tables
 
-### Encounter Summary
+* gold.kpi_adt_volume
+* gold.kpi_readmission_rate
+* gold.kpi_top_diagnoses
+* gold.kpi_medication_usage
+* gold.kpi_length_of_stay
 
-Visit statistics and utilization metrics
-
-### Readmission Flags
-
-30-day readmission indicators
+These Gold KPI tables are the only data sources used by the Databricks SQL Dashboard.
 
 ---
 
+# Workflow
+
+The project includes a Databricks Workflow that orchestrates the complete ETL process.
+
+```
+Unity Catalog Bootstrap (One-Time Setup)
+
+        ↓
+
+Bronze Layer
+
+        ↓
+
+Silver DLT Pipeline
+
+        ↓
+
+OMOP Mapping
+
+        ↓
+
+Gold Analytics
+
+        ↓
+
+Databricks SQL Dashboard
+```
+
+Running the workflow refreshes all Gold KPI tables. Refreshing the dashboard displays the latest analytics.
+
+---
+
+# Governance
+
+## Objective
+
+Implement governance practices for secure, organized, and scalable healthcare analytics.
+
+## Implemented Features
+
+* Unity Catalog for centralized catalog and schema management
+* Medallion Architecture (Bronze → Silver → Gold)
+* Workflow-based ETL orchestration
+* Gold KPI tables as the single source of truth for dashboard reporting
+* Structured data organization across Bronze, Silver, OMOP, and Gold schemas
+
+## Enterprise Governance Features
+
+The following governance capabilities are included in the project design but require Azure Databricks Enterprise features that are not available with the Azure Student subscription used for this project.
+
+| Feature                        | Status            | Remarks                                                     |
+| ------------------------------ | ----------------- | ----------------------------------------------------------- |
+| Unity Catalog Bootstrap Script | ✅ Implemented     | Bootstrap notebook included for enterprise deployment       |
+| Column-Level Dynamic Masking   | ❌ Not Implemented | Requires Unity Catalog Enterprise permissions               |
+| Row-Level Security             | ❌ Not Implemented | Requires Unity Catalog Enterprise permissions               |
+| Databricks Audit Log Pipeline  | ❌ Not Implemented | Requires Databricks system audit logs                       |
+| Microsoft Purview Integration  | ❌ Not Implemented | Requires Azure Purview service and enterprise configuration |
+
+The project architecture has been designed so these governance features can be added in an enterprise Databricks environment without modifying the existing Bronze, Silver, OMOP, Gold, Workflow, or Dashboard layers.
+
+--- 
+
 # Clinical KPI Dashboard
 
-Databricks SQL Dashboard containing five healthcare KPIs.
+The dashboard is built entirely on Gold KPI tables.
 
 ## 1. ADT Volume
 
-Total healthcare encounters.
+**Source**
 
-Example:
+```
+gold.kpi_adt_volume
+```
 
-27.81K Visits
+Visualization
 
-Visualization:
-
-KPI Card
+* Line Chart
 
 ---
 
 ## 2. Readmission Rate
 
-Percentage of patients readmitted within 30 days.
+**Source**
 
-Example:
+```
+gold.kpi_readmission_rate
+```
 
-39.02%
+Visualization
 
-Visualization:
-
-KPI Card
+* KPI Card
 
 ---
 
 ## 3. Top Diagnoses
 
-Most frequently occurring clinical conditions.
+**Source**
 
-Visualization:
+```
+gold.kpi_top_diagnoses
+```
 
-Bar Chart
+Visualization
+
+* Horizontal Bar Chart
 
 ---
 
 ## 4. Medication Usage
 
-Most commonly prescribed medications.
+**Source**
 
-Visualization:
+```
+gold.kpi_medication_usage
+```
 
-Bar Chart
+Visualization
+
+* Horizontal Bar Chart
 
 ---
 
-## 5. Length of Stay
+## 5. Average Length of Stay
 
-Average stay duration by visit type.
+**Source**
 
-Visit Types:
+```
+gold.kpi_length_of_stay
+```
 
-* Ambulatory
-* Emergency
-* Inpatient
+Visualization
 
-Visualization:
-
-Bar Chart
+* Bar Chart
 
 ---
 
 # Dashboard Components
 
-The dashboard includes:
+The dashboard includes
 
 * KPI Cards
+* Line Charts
 * Bar Charts
-* Healthcare Metrics
-* Clinical Insights
+* Clinical KPIs
 * Interactive Filters
+* Healthcare Insights
 
 ---
 
@@ -397,17 +450,23 @@ The dashboard includes:
 Healthcare-Lakehouse-Analytics/
 
 │
+├── 00_Unity_Catalog_Bootstrap/
+│   └── unity_catalog_bootstrap
+│
 ├── 01_Bronze_Layer/
 │   └── bronze_ingestion_notebook
 │
 ├── 02_Silver_Layer/
-│   └── silver_transformation_notebook
+│   └── silver_dlt_pipeline
 │
 ├── 03_OMOP_Mapping/
 │   └── omop_mapping_notebook
 │
 ├── 04_Gold_Layer/
-│   └── analytics_queries
+│   └── gold_analytics_notebook
+│
+├── workflows/
+│   └── healthcare_etl_workflow
 │
 ├── dashboards/
 │   └── healthcare_dashboard
@@ -419,36 +478,43 @@ Healthcare-Lakehouse-Analytics/
 │   ├── medication_usage.png
 │   └── length_of_stay.png
 │
-└── README.md
+├── README.md
+│
+└── HIPAA_CONTROLS.md
 ```
 
 ---
 
 # Key Outcomes
 
-* Built an end-to-end Healthcare Lakehouse platform
+* Built an end-to-end Healthcare Lakehouse Analytics Platform
 * Implemented Medallion Architecture
+* Automated ETL using Delta Live Tables
 * Standardized healthcare records using OMOP CDM
-* Created analytical Gold datasets
+* Created Gold analytical datasets
+* Built Gold KPI tables
+* Automated execution using Databricks Workflow
 * Developed Databricks SQL Dashboard
-* Generated clinical KPIs and insights
+* Generated healthcare insights through interactive analytics
 
 ---
 
 # Future Improvements
 
-* Real-time streaming ingestion
-* Predictive readmission risk modeling
-* Clinical outcome analytics
-* Power BI integration
-* Advanced cohort analysis
+* ML-based Readmission Prediction
+* MLflow Integration
+* Model Registry
+* Batch Inference Pipeline
+* Real-time Streaming Ingestion
+* Power BI Integration
+* Advanced Cohort Analysis
 
 ---
 
 # Author
 
-Prateek Garg
+**Prateek Garg**
 
 Healthcare Lakehouse Analytics Platform
 
-Azure Databricks | Delta Lake | DLT | OMOP CDM | SQL Analytics
+Azure Databricks | Delta Lake | Delta Live Tables | Unity Catalog | OMOP CDM | Databricks SQL | Healthcare Analytics

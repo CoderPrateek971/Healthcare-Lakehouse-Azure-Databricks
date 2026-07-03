@@ -4,7 +4,15 @@
 
 This project implements an end-to-end Healthcare Lakehouse Analytics Platform using Azure Data Lake Storage Gen2 (ADLS Gen2), Azure Databricks, Delta Live Tables (DLT), OMOP Common Data Model (CDM), Unity Catalog, and Databricks SQL Dashboards.
 
-The solution follows the Medallion Architecture (Bronze → Silver → Gold) to ingest, transform, standardize, and analyze healthcare data.
+The solution follows the Medallion Architecture (Bronze → Silver → OMOP → Gold) to ingest, transform, standardize, and analyze healthcare data from multiple healthcare data formats.
+
+The platform supports ingestion of:
+
+- FHIR R4 Resources (JSON)
+- HL7 Flat Files (CSV)
+- ADT (Admission, Discharge and Transfer) Records
+
+All healthcare data is standardized into the OMOP Common Data Model (CDM) before generating Gold analytical datasets and Databricks SQL dashboards.
 
 The final output is a Databricks SQL Dashboard powered by Gold KPI tables containing healthcare insights such as ADT Volume, Readmission Rate, Top Diagnoses, Medication Usage, and Average Length of Stay.
 
@@ -12,24 +20,30 @@ The final output is a Databricks SQL Dashboard powered by Gold KPI tables contai
 
 # Architecture
 
-```
-Raw Healthcare Files (ADLS Gen2)
+```text
+FHIR JSON
+HL7 Flat Files
+ADT Records
 
         ↓
 
-Bronze Layer (Ingestion)
+ADLS Gen2 (Raw)
 
         ↓
 
-Silver Layer (Transformation)
+Bronze Layer
 
         ↓
 
-OMOP CDM Mapping
+Silver Layer (DLT)
 
         ↓
 
-Gold Analytics & KPI Tables
+OMOP CDM
+
+        ↓
+
+Gold KPI Tables
 
         ↓
 
@@ -39,6 +53,21 @@ Databricks SQL Dashboard
 
 Healthcare Insights
 ```
+
+---
+
+# Multi-Source Data Integration
+
+The platform ingests healthcare data from multiple sources.
+
+Input Sources
+
+- FHIR JSON
+- HL7 Flat Files
+- Clinical CSV Files
+- ADT Records
+
+These heterogeneous datasets are standardized into unified Silver business entities before being mapped into the OMOP Common Data Model for downstream analytics.
 
 ---
 
@@ -54,6 +83,21 @@ Healthcare Insights
 * PySpark
 * SQL
 * OMOP CDM v5.4
+* FHIR R4
+* HL7
+* ADT Healthcare Data
+* Auto Loader
+
+---
+
+# Supported Healthcare Standards
+
+| Standard | Description |
+|----------|-------------|
+| FHIR R4 | REST-based Healthcare Interoperability Standard |
+| HL7 | Legacy Healthcare Messaging Standard |
+| ADT | Admission, Discharge and Transfer Events |
+| OMOP CDM v5.4 | Standardized Clinical Data Model |
 
 ---
 
@@ -123,10 +167,28 @@ raw/
 
 Example
 
-* patients.csv
-* encounters.csv
-* conditions.csv
-* medications.csv
+FHIR Resources
+
+- Patient.json
+- Encounter.json
+- Condition.json
+- Observation.json
+- MedicationRequest.json
+
+HL7 Flat Files
+
+- patient.csv
+- encounter.csv
+
+ADT Records
+
+- adt_events.csv
+
+Clinical Flat Files
+
+- conditions.csv
+- observations.csv
+- medications.csv
 
 ---
 
@@ -188,13 +250,22 @@ Azure Student subscriptions do not provide permissions to create a metastore or 
 
 ## Objective
 
-Ingest raw healthcare datasets into the Lakehouse.
+Ingest multiple healthcare data formats into the Lakehouse while preserving raw data.
+
+Supported Sources
+
+- FHIR JSON
+- HL7 Flat Files
+- ADT Records
+- Clinical CSV Files
 
 ## Features
 
-* Auto Loader ingestion
+* Multi-format ingestion
+* Auto Loader
 * Schema inference
 * Schema evolution
+* Delta conversion
 * Delta tables
 * Batch & micro-batch ingestion
 
@@ -206,10 +277,18 @@ Ingest raw healthcare datasets into the Lakehouse.
 
 ## Output Tables
 
-* bronze.patient
-* bronze.encounter
-* bronze.condition
-* bronze.medication
+* bronze.patient_fhir
+* bronze.encounter_fhir
+* bronze.condition_fhir
+* bronze.observation_fhir
+* bronze.medicationrequest_fhir
+* bronze.patient_hl7
+* bronze.encounter_hl7
+* bronze.patient_flat
+* bronze.encounter_flat
+* bronze.condition_flat
+* bronze.observation_flat
+* bronze.medication_flat
 
 ---
 
@@ -217,14 +296,18 @@ Ingest raw healthcare datasets into the Lakehouse.
 
 ## Objective
 
-Clean, standardize, validate and transform healthcare records.
+The Silver layer standardizes healthcare records coming from multiple data sources into one unified business entity.
+
+Multiple input formats are merged into a single Silver table using schema alignment and union operations. Clean, standardize, validate and transform healthcare records.
 
 ## Features
 
+* Multi-source integration
+* Schema standardization
+* Union across FHIR, HL7 and Flat Files
 * Data cleansing
 * Null handling
 * Deduplication
-* Standardized schema
 * DLT Expectations
 * Data quality validation
 * Surrogate key generation
@@ -240,7 +323,8 @@ Clean, standardize, validate and transform healthcare records.
 * silver.patient
 * silver.encounter
 * silver.condition
-* silver.medication
+* silver.observation
+* silver.medication_request
 
 ---
 
@@ -248,7 +332,7 @@ Clean, standardize, validate and transform healthcare records.
 
 ## Objective
 
-Map Silver entities into OMOP CDM v5.4.
+Map standardized healthcare entities from FHIR, HL7 and Flat Files into OMOP CDM v5.4.
 
 ## Notebook
 
@@ -262,6 +346,7 @@ Map Silver entities into OMOP CDM v5.4.
 * omop.visit_occurrence
 * omop.condition_occurrence
 * omop.drug_exposure
+* omop.observation_occurrence
 
 ---
 
@@ -299,28 +384,34 @@ These Gold KPI tables are the only data sources used by the Databricks SQL Dashb
 
 The project includes a Databricks Workflow that orchestrates the complete ETL process.
 
-```
+```text
 Unity Catalog Bootstrap (One-Time Setup)
 
         ↓
 
-Bronze Layer
+FHIR
+HL7
+Flat Files
 
         ↓
 
-Silver DLT Pipeline
+Bronze
 
         ↓
 
-OMOP Mapping
+Silver DLT
 
         ↓
 
-Gold Analytics
+OMOP
 
         ↓
 
-Databricks SQL Dashboard
+Gold
+
+        ↓
+
+Dashboard
 ```
 
 Running the workflow refreshes all Gold KPI tables. Refreshing the dashboard displays the latest analytics.
@@ -336,7 +427,7 @@ Implement governance practices for secure, organized, and scalable healthcare an
 ## Implemented Features
 
 * Unity Catalog for centralized catalog and schema management
-* Medallion Architecture (Bronze → Silver → Gold)
+* Medallion Architecture (Bronze → Silver → OMOP → Gold)
 * Workflow-based ETL orchestration
 * Gold KPI tables as the single source of truth for dashboard reporting
 * Structured data organization across Bronze, Silver, OMOP, and Gold schemas
@@ -487,20 +578,28 @@ Healthcare-Lakehouse-Analytics/
 
 # Key Outcomes
 
-* Built an end-to-end Healthcare Lakehouse Analytics Platform
+* Built an end-to-end Multi-Source Healthcare Lakehouse Analytics Platform
+* Integrated healthcare data from
+  - FHIR
+  - HL7
+  - Flat Files
 * Implemented Medallion Architecture
-* Automated ETL using Delta Live Tables
 * Standardized healthcare records using OMOP CDM
-* Created Gold analytical datasets
-* Built Gold KPI tables
-* Automated execution using Databricks Workflow
-* Developed Databricks SQL Dashboard
-* Generated healthcare insights through interactive analytics
+* Automated ETL using Delta Live Tables
+* Created Gold KPI Tables
+* Developed interactive Databricks SQL Dashboard
+* Implemented Workflow Orchestration
+* Generated healthcare insights from multiple healthcare standards
 
 ---
 
 # Future Improvements
 
+* FHIR Streaming APIs
+* HL7 Message Streaming
+* CDC Incremental Ingestion
+* Patient 360 Dashboard
+* Clinical Risk Prediction
 * ML-based Readmission Prediction
 * MLflow Integration
 * Model Registry

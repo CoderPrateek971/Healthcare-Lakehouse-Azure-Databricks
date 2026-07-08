@@ -607,6 +607,20 @@ The following governance capabilities are included in the project design but req
 
 The project architecture has been designed so these governance features can be added in an enterprise Databricks environment without modifying the existing Bronze, Silver, OMOP, Gold, Workflow, or Dashboard layers.
 
+---
+
+# Role-Specific SQL Views
+
+Implemented simulated role-based data access using SQL views.
+
+| View | Intended User | Access Level |
+|------|---------------|--------------|
+| `gold.clinician_view` | Clinicians | Full clinical data |
+| `gold.analyst_view` | Data Analysts | Patient identifiers masked |
+| `gold.auditor_view` | Auditors | Metadata and prediction results only |
+
+**Note:** These views demonstrate role-based access patterns. Actual row-level security and group-based authorization require Unity Catalog Enterprise features, which are not available in the Azure Student subscription.
+
 --- 
 
 # Clinical KPI Dashboard

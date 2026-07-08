@@ -43,15 +43,21 @@ OMOP CDM
 
         ↓
 
-Gold KPI Tables
+Gold Layer
 
+├── KPI Tables
+│       ↓
+│  SQL Dashboard
+│
+└── ML Features
         ↓
-
-Databricks SQL Dashboard
-
+ Model Training
         ↓
-
-Healthcare Insights
+ MLflow + Model Registry
+        ↓
+ Batch Inference
+        ↓
+ Prediction Table
 ```
 
 ---
@@ -380,6 +386,157 @@ These Gold KPI tables are the only data sources used by the Databricks SQL Dashb
 
 ---
 
+# Machine Learning Pipeline
+
+## Objective
+
+Predict the likelihood of a patient being readmitted within 30 days using healthcare features generated in the Gold layer.
+
+The machine learning pipeline uses Gold analytical data to train an XGBoost classifier, tracks experiments with MLflow, registers the best model in Unity Catalog Model Registry, and performs batch inference on newly processed patient cohorts.
+
+---
+
+# Model Training
+
+## Notebook
+
+```
+05_ML_Readmission_Prediction
+```
+
+## Objective
+
+Train an XGBoost model using Gold layer features and register the best-performing model.
+
+## Workflow
+
+```text
+Gold Readmission Features
+
+        ↓
+
+Feature Engineering
+
+        ↓
+
+Categorical Encoding
+
+        ↓
+
+Vector Assembler
+
+        ↓
+
+Train/Test Split
+
+        ↓
+
+XGBoost Training
+
+        ↓
+
+Model Evaluation
+
+        ↓
+
+MLflow Tracking
+
+        ↓
+
+Unity Catalog Model Registry
+
+        ↓
+
+Champion Model
+```
+
+## Features
+
+* Uses Gold analytical dataset as training data
+* Performs categorical feature encoding using StringIndexer
+* Creates feature vectors using VectorAssembler
+* Trains an XGBoost binary classification model
+* Evaluates model performance using classification metrics
+* Logs experiments using MLflow
+* Registers the model in Unity Catalog Model Registry
+* Saves preprocessing artifacts inside Unity Catalog Volumes for inference
+
+## Output
+
+```
+Model Registry
+
+readmission_xgboost_model
+```
+
+Preprocessing artifacts stored in
+
+```
+/Volumes/db_healthcare_kl/default/ml_models/
+```
+
+including
+
+* StringIndexer Models
+* Feature metadata
+
+---
+
+# Batch Model Inference
+
+## Notebook
+
+```
+06_Model_Inference
+```
+
+## Objective
+
+Run batch predictions on newly processed patient cohorts using the Champion model registered in MLflow.
+
+## Workflow
+
+```text
+Gold Readmission Features
+
+        ↓
+
+Latest Patient Cohort
+
+        ↓
+
+Load Champion Model
+
+        ↓
+
+Apply Same Feature Engineering
+
+        ↓
+
+Batch Prediction
+
+        ↓
+
+Prediction Table
+```
+
+## Features
+
+* Loads the Champion model from Unity Catalog Model Registry
+* Reads the latest patient cohort from the Gold layer
+* Applies the same preprocessing pipeline used during training
+* Generates readmission predictions
+* Stores prediction results as a Gold table
+* Displays predictions for downstream analytics
+
+## Output Table
+
+```
+gold.readmission_predictions
+```
+
+---
+
 # Workflow
 
 The project includes a Databricks Workflow that orchestrates the complete ETL process.
@@ -409,9 +566,13 @@ OMOP
 
 Gold
 
-        ↓
+├── Dashboard
 
-Dashboard
+└── ML Training
+        ↓
+Model Registry
+        ↓
+Batch Inference
 ```
 
 Running the workflow refreshes all Gold KPI tables. Refreshing the dashboard displays the latest analytics.
@@ -556,6 +717,12 @@ Healthcare-Lakehouse-Analytics/
 ├── 04_Gold_Layer/
 │   └── gold_analytics_notebook
 │
+├── 05_ML_Readmission_Prediction/
+│   └── model_training_notebook
+│
+├── 06_Model_Inference/
+│   └── batch_inference_notebook
+│
 ├── workflows/
 │   └── healthcare_etl_workflow
 │
@@ -590,6 +757,12 @@ Healthcare-Lakehouse-Analytics/
 * Developed interactive Databricks SQL Dashboard
 * Implemented Workflow Orchestration
 * Generated healthcare insights from multiple healthcare standards
+* Built an end-to-end healthcare readmission prediction pipeline
+* Trained an XGBoost model using Gold layer features
+* Tracked experiments with MLflow
+* Registered the production model in Unity Catalog Model Registry
+* Implemented batch inference for newly processed patient cohorts
+* Stored prediction results as Gold tables for downstream analytics
 
 ---
 
@@ -600,13 +773,16 @@ Healthcare-Lakehouse-Analytics/
 * CDC Incremental Ingestion
 * Patient 360 Dashboard
 * Clinical Risk Prediction
-* ML-based Readmission Prediction
-* MLflow Integration
-* Model Registry
-* Batch Inference Pipeline
 * Real-time Streaming Ingestion
 * Power BI Integration
 * Advanced Cohort Analysis
+* Hyperparameter Optimization
+* Automated Model Retraining
+* Real-time Online Inference
+* Model Monitoring and Drift Detection
+* Feature Store Integration
+* Explainable AI (SHAP)
+* Scheduled ML Workflows
 
 ---
 

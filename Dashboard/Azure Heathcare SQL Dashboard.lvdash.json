@@ -1,0 +1,785 @@
+{
+  "datasets": [
+    {
+      "name": "4ba954b6",
+      "displayName": "kpi_adt_volume",
+      "config": {
+        "version": "1.1",
+        "source": "db_healthcare_kl.gold.kpi_adt_volume",
+        "dimensions": [
+          {
+            "name": "month",
+            "expr": "source.month",
+            "displayName": "Month"
+          },
+          {
+            "name": "total_visits",
+            "expr": "source.total_visits",
+            "displayName": "Total Visits"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "c3eb44c4",
+      "displayName": "kpi_length_of_stay",
+      "config": {
+        "version": "1.1",
+        "source": "db_healthcare_kl.gold.kpi_length_of_stay",
+        "dimensions": [
+          {
+            "name": "visit_type",
+            "expr": "source.visit_type",
+            "displayName": "Visit Type"
+          },
+          {
+            "name": "avg_stay_days",
+            "expr": "source.avg_stay_days",
+            "displayName": "Avg Stay Days"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "717be7f8",
+      "displayName": "kpi_medication_usage",
+      "config": {
+        "version": "1.1",
+        "source": "db_healthcare_kl.gold.kpi_medication_usage",
+        "dimensions": [
+          {
+            "name": "medication_name",
+            "expr": "source.medication_name",
+            "displayName": "Medication Name"
+          },
+          {
+            "name": "total_usage",
+            "expr": "source.total_usage",
+            "displayName": "Total Usage"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "a66d0e3a",
+      "displayName": "kpi_readmission_rate",
+      "config": {
+        "version": "1.1",
+        "source": "db_healthcare_kl.gold.kpi_readmission_rate",
+        "dimensions": [
+          {
+            "name": "readmission_rate",
+            "expr": "source.readmission_rate",
+            "displayName": "Readmission Rate"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "9ce1416c",
+      "displayName": "kpi_top_diagnoses",
+      "config": {
+        "version": "1.1",
+        "source": "db_healthcare_kl.gold.kpi_top_diagnoses",
+        "dimensions": [
+          {
+            "name": "diagnosis",
+            "expr": "source.diagnosis",
+            "displayName": "Diagnosis"
+          },
+          {
+            "name": "total_cases",
+            "expr": "source.total_cases",
+            "displayName": "Total Cases"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "9823d7bc",
+      "displayName": "kpi_readmission_risk_distribution",
+      "config": {
+        "version": "1.1",
+        "source": "db_healthcare_kl.gold.kpi_readmission_risk_distribution",
+        "dimensions": [
+          {
+            "name": "risk_level",
+            "expr": "source.risk_level",
+            "displayName": "Risk Level"
+          },
+          {
+            "name": "person_count",
+            "expr": "source.person_count",
+            "displayName": "Person Count"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "e6dcc123",
+      "displayName": "kpi_high_risk_patients",
+      "config": {
+        "version": "1.1",
+        "source": "db_healthcare_kl.gold.kpi_high_risk_patients",
+        "dimensions": [
+          {
+            "name": "person_id",
+            "expr": "source.person_id",
+            "displayName": "Person Id"
+          },
+          {
+            "name": "age",
+            "expr": "source.age",
+            "displayName": "Age"
+          },
+          {
+            "name": "primary_diagnosis",
+            "expr": "source.primary_diagnosis",
+            "displayName": "Primary Diagnosis"
+          },
+          {
+            "name": "previous_admissions",
+            "expr": "source.previous_admissions",
+            "displayName": "Previous Admissions"
+          },
+          {
+            "name": "prediction",
+            "expr": "source.prediction",
+            "displayName": "Prediction"
+          },
+          {
+            "name": "risk_level",
+            "expr": "source.risk_level",
+            "displayName": "Risk Level"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "6e838b08",
+      "displayName": "kpi_readmission_by_cohort",
+      "config": {
+        "version": "1.1",
+        "source": "db_healthcare_kl.gold.kpi_readmission_by_cohort",
+        "dimensions": [
+          {
+            "name": "cohort_name",
+            "expr": "source.cohort_name",
+            "displayName": "Cohort Name"
+          },
+          {
+            "name": "high_risk_patient",
+            "expr": "source.high_risk_patient",
+            "displayName": "High Risk Patient"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    },
+    {
+      "name": "e53d21dc",
+      "displayName": "kpi_average_risk_by_diagnosis",
+      "config": {
+        "version": "1.1",
+        "source": "db_healthcare_kl.gold.kpi_average_risk_by_diagnosis",
+        "dimensions": [
+          {
+            "name": "primary_diagnosis",
+            "expr": "source.primary_diagnosis",
+            "displayName": "Primary Diagnosis"
+          },
+          {
+            "name": "average_risk",
+            "expr": "source.average_risk",
+            "displayName": "Average Risk"
+          },
+          {
+            "name": "patient_count",
+            "expr": "source.patient_count",
+            "displayName": "Patient Count"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "comment": "Represents the total number of rows in the dataset. Use this measure to count all",
+            "displayName": "Count"
+          }
+        ]
+      }
+    }
+  ],
+  "pages": [
+    {
+      "name": "3f8d1680",
+      "displayName": "Untitled page",
+      "layout": [
+        {
+          "widget": {
+            "name": "adt-v",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "4ba954b6",
+                  "fields": [
+                    {
+                      "name": "month",
+                      "expression": "`month`"
+                    },
+                    {
+                      "name": "total_visits",
+                      "expression": "`total_visits`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "ADT Volume"
+              },
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "month",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "total_visits",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "readmission",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "a66d0e3a",
+                  "fields": [
+                    {
+                      "name": "readmission_rate",
+                      "expression": "`readmission_rate`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Readmission Rate"
+              },
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "readmission_rate"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 6,
+            "width": 12,
+            "height": 4
+          }
+        },
+        {
+          "widget": {
+            "name": "top",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "9ce1416c",
+                  "fields": [
+                    {
+                      "name": "diagnosis",
+                      "expression": "`diagnosis`"
+                    },
+                    {
+                      "name": "total_cases",
+                      "expression": "`total_cases`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Top Diagnosis"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "diagnosis",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "total_cases",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 10,
+            "width": 12,
+            "height": 10
+          }
+        },
+        {
+          "widget": {
+            "name": "medication-usage",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "717be7f8",
+                  "fields": [
+                    {
+                      "name": "medication_name",
+                      "expression": "`medication_name`"
+                    },
+                    {
+                      "name": "total_usage",
+                      "expression": "`total_usage`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Medication Usage"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "medication_name",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "total_usage",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 20,
+            "width": 12,
+            "height": 9
+          }
+        },
+        {
+          "widget": {
+            "name": "length-o",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "c3eb44c4",
+                  "fields": [
+                    {
+                      "name": "visit_type",
+                      "expression": "`visit_type`"
+                    },
+                    {
+                      "name": "avg_stay_days",
+                      "expression": "`avg_stay_days`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Length Of Stay"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "visit_type",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "avg_stay_days",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 29,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "readmission-risk-distribution",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "9823d7bc",
+                  "fields": [
+                    {
+                      "name": "risk_level",
+                      "expression": "`risk_level`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "showDescription": true,
+                "title": "Readmission Risk Distribution",
+                "description": "Shows what percentage of patients are predicted to be at High Risk vs Low Risk."
+              },
+              "widgetType": "pie",
+              "encodings": {
+                "color": {
+                  "fieldName": "risk_level",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 35,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "2-high-risk-patients-table",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "e6dcc123",
+                  "fields": [
+                    {
+                      "name": "person_id",
+                      "expression": "`person_id`"
+                    },
+                    {
+                      "name": "age",
+                      "expression": "`age`"
+                    },
+                    {
+                      "name": "primary_diagnosis",
+                      "expression": "`primary_diagnosis`"
+                    },
+                    {
+                      "name": "previous_admissions",
+                      "expression": "`previous_admissions`"
+                    },
+                    {
+                      "name": "risk_level",
+                      "expression": "`risk_level`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "showDescription": true,
+                "title": "High-Risk Patients Table"
+              },
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "person_id"
+                  },
+                  {
+                    "fieldName": "age"
+                  },
+                  {
+                    "fieldName": "primary_diagnosis"
+                  },
+                  {
+                    "fieldName": "previous_admissions"
+                  },
+                  {
+                    "fieldName": "risk_level"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 41,
+            "width": 12,
+            "height": 8
+          }
+        },
+        {
+          "widget": {
+            "name": "3-readmission-by-cohort-1",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "6e838b08",
+                  "fields": [
+                    {
+                      "name": "cohort_name",
+                      "expression": "`cohort_name`"
+                    },
+                    {
+                      "name": "high_risk_patient",
+                      "expression": "`high_risk_patient`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "showDescription": true,
+                "title": "Readmission by Cohort"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "cohort_name",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "high_risk_patient",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 49,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "average-risk-by-diagnosis",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "e53d21dc",
+                  "fields": [
+                    {
+                      "name": "primary_diagnosis",
+                      "expression": "`primary_diagnosis`"
+                    },
+                    {
+                      "name": "average_risk",
+                      "expression": "`average_risk`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "frame": {
+                "showTitle": true,
+                "title": "Average Risk by Diagnosis"
+              },
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "primary_diagnosis",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                },
+                "y": {
+                  "fieldName": "average_risk",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 55,
+            "width": 12,
+            "height": 8
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "id": "d2c6d095-5196-45c6-94d4-e6fe9ad00244",
+  "pipeline_type": "WORKSPACE",
+  "name": "Silver DLT Pipeline",
+  "libraries": [
+    {
+      "notebook": {
+        "path": "/Workspace/Users/prateekgarg0310@gmail.com/Healthcare-Lakehouse-Azure-Databricks/Notebook/02_Silver Layer"
+      }
+    }
+  ],
+  "schema": "silver",
+  "continuous": false,
+  "development": false,
+  "photon": true,
+  "channel": "CURRENT",
+  "catalog": "db_healthcare_kl",
+  "serverless": true,
+  "root_path": "/Workspace/Users/prateekgarg0310@gmail.com/Silver dlt pipeline"
+}

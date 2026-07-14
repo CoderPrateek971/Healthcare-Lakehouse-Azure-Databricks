@@ -552,6 +552,10 @@
                     {
                       "name": "risk_level",
                       "expression": "`risk_level`"
+                    },
+                    {
+                      "name": "sum(person_count)",
+                      "expression": "SUM(`person_count`)"
                     }
                   ],
                   "disaggregated": false
@@ -573,7 +577,23 @@
                   "scale": {
                     "type": "categorical"
                   }
-                }
+                },
+                "label": {
+                  "show": false
+                },
+                "extra": [
+                  {
+                    "fieldName": "sum(person_count)",
+                    "format": {
+                      "type": "number-plain",
+                      "abbreviation": "compact",
+                      "decimalPlaces": {
+                        "type": "max",
+                        "places": 2
+                      }
+                    }
+                  }
+                ]
               },
               "data": {
                 "queryName": "main_query"
@@ -625,7 +645,7 @@
               "version": 2,
               "frame": {
                 "showTitle": true,
-                "showDescription": true,
+                "showDescription": false,
                 "title": "High-Risk Patients Table"
               },
               "widgetType": "table",
@@ -686,7 +706,7 @@
               "version": 3,
               "frame": {
                 "showTitle": true,
-                "showDescription": true,
+                "showDescription": false,
                 "title": "Readmission by Cohort"
               },
               "widgetType": "bar",
